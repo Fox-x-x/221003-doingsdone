@@ -154,7 +154,7 @@ $tasks = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
                           <tr class="tasks__item task  <?php if ($val["done"] == true): ?>task--completed<?php endif; ?>">
                               <td class="task__select">
                                   <label class="checkbox task__checkbox">
-                                      <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($val["done"] == true): ?>checked<?php endif; ?> value="1">
+                                      <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
                                       <span class="checkbox__text"><?=$val["task"]; ?></span>
                                   </label>
                               </td>
