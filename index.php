@@ -4,37 +4,37 @@ $show_complete_tasks = rand(0, 1);
 $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 
 $tasks = [
-  0 => [
+   [
     "task" => "Собеседование в IT компании",
     "date" => "01.12.2018",
     "project" => $projects[2],
     "done" => false
   ],
-  1 => [
+  [
     "task" => "Выполнить тестовое задание",
     "date" => "25.12.2018",
     "project" => $projects[2],
     "done" => false
   ],
-  2 => [
+  [
     "task" => "Сделать задание первого раздела",
     "date" => "21.12.2018",
     "project" => $projects[1],
     "done" => true
   ],
-  3 => [
+  [
     "task" => "Встреча с другом",
     "date" => "22.12.2018",
     "project" => $projects[0],
     "done" => false
   ],
-  4 => [
+  [
     "task" => "Купить корм для кота",
     "date" => "",
     "project" => $projects[3],
     "done" => false
   ],
-  5 => [
+  [
     "task" => "Заказать пиццу",
     "date" => "",
     "project" => $projects[3],
@@ -98,10 +98,10 @@ function countTasks($tasksArray, $projectName) {
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                      <?php foreach ($projects as $key => $val): ?> 
+                      <?php foreach ($projects as $category): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#"><?php echo $val ?></a>
-                            <span class="main-navigation__list-item-count"><?php echo countTasks($tasks, $val); ?></span>
+                            <a class="main-navigation__list-item-link" href="#"><?php echo $category ?></a>
+                            <span class="main-navigation__list-item-count"><?php echo countTasks($tasks, $category); ?></span>
                         </li>
                       <?php endforeach; ?> 
                     </ul>
