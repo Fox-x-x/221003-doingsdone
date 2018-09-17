@@ -3,49 +3,44 @@
 $show_complete_tasks = rand(0, 1);
 $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 
-$task_1 = [
-  "task" => "Собеседование в IT компании",
-  "date" => "01.12.2018",
-  "project" => $projects[2],
-  "done" => false
+$tasks = [
+  0 => [
+    "task" => "Собеседование в IT компании",
+    "date" => "01.12.2018",
+    "project" => $projects[2],
+    "done" => false
+  ],
+  1 => [
+    "task" => "Выполнить тестовое задание",
+    "date" => "25.12.2018",
+    "project" => $projects[2],
+    "done" => false
+  ],
+  2 => [
+    "task" => "Сделать задание первого раздела",
+    "date" => "21.12.2018",
+    "project" => $projects[1],
+    "done" => true
+  ],
+  3 => [
+    "task" => "Встреча с другом",
+    "date" => "22.12.2018",
+    "project" => $projects[0],
+    "done" => false
+  ],
+  4 => [
+    "task" => "Купить корм для кота",
+    "date" => "",
+    "project" => $projects[3],
+    "done" => false
+  ],
+  5 => [
+    "task" => "Заказать пиццу",
+    "date" => "",
+    "project" => $projects[3],
+    "done" => false
+  ]
 ];
-
-$task_2 = [
-  "task" => "Выполнить тестовое задание",
-  "date" => "25.12.2018",
-  "project" => $projects[2],
-  "done" => false
-];
-
-$task_3 = [
-  "task" => "Сделать задание первого раздела",
-  "date" => "21.12.2018",
-  "project" => $projects[1],
-  "done" => true
-];
-
-$task_4 = [
-  "task" => "Встреча с другом",
-  "date" => "22.12.2018",
-  "project" => $projects[0],
-  "done" => false
-];
-
-$task_5 = [
-  "task" => "Купить корм для кота",
-  "date" => "",
-  "project" => $projects[3],
-  "done" => false
-];
-
-$task_6 = [
-  "task" => "Заказать пиццу",
-  "date" => "",
-  "project" => $projects[3],
-  "done" => false
-];
-
-$tasks = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
 
 ?>
@@ -93,12 +88,12 @@ $tasks = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                      <?php for ($i = 0; $i < count($projects); $i++ ): ?> 
-                      <li class="main-navigation__list-item">
-                          <a class="main-navigation__list-item-link" href="#"><?php echo $projects[$i] ?></a>
-                          <span class="main-navigation__list-item-count">0</span>
-                      </li>
-                      <?php endfor; ?> 
+                      <?php foreach ($projects as $key => $val): ?> 
+                        <li class="main-navigation__list-item">
+                            <a class="main-navigation__list-item-link" href="#"><?php echo $val ?></a>
+                            <span class="main-navigation__list-item-count">0</span>
+                        </li>
+                      <?php endforeach; ?> 
                     </ul>
                 </nav>
 
@@ -134,7 +129,7 @@ $tasks = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
                 <table class="tasks">
                     <?php foreach ($tasks as $key => $val): ?> 
-                      <?php if ($show_complete_tasks): ?>
+                      <?php if (!$val["done"] || ($show_complete_tasks && $val["done"])): ?>
                         <tr class="tasks__item task  <?php if ($val["done"] == true): ?>task--completed<?php endif; ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
@@ -149,23 +144,6 @@ $tasks = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
                             <td class="task__date"><?=$val["date"]; ?></td>
                         </tr>
-                      <?php else: ?>
-                        <?php if ($val["done"] == false): ?>
-                          <tr class="tasks__item task  <?php if ($val["done"] == true): ?>task--completed<?php endif; ?>">
-                              <td class="task__select">
-                                  <label class="checkbox task__checkbox">
-                                      <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                      <span class="checkbox__text"><?=$val["task"]; ?></span>
-                                  </label>
-                              </td>
-
-                              <td class="task__file">
-                                  <a class="download-link" href="#"></a>
-                              </td>
-
-                              <td class="task__date"><?=$val["date"]; ?></td>
-                          </tr>
-                        <?php endif; ?>
                       <?php endif; ?>
                     <?php endforeach; ?>
 
