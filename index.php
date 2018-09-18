@@ -42,17 +42,6 @@ $tasks = [
   ]
 ];
 
-function countTasks($tasksArray, $projectName) {
-  $tasksCounter = 0;
-  foreach ($tasksArray as $key => $val) {
-    if ($val["project"] == $projectName) {
-      $tasksCounter++;
-    }
-  }
-
-  return $tasksCounter;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
