@@ -4,44 +4,43 @@ $show_complete_tasks = rand(0, 1);
 $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 
 $tasks = [
-  0 => [
+   [
     "task" => "Собеседование в IT компании",
     "date" => "01.12.2018",
     "project" => $projects[2],
     "done" => false
   ],
-  1 => [
+  [
     "task" => "Выполнить тестовое задание",
     "date" => "25.12.2018",
     "project" => $projects[2],
     "done" => false
   ],
-  2 => [
+  [
     "task" => "Сделать задание первого раздела",
     "date" => "21.12.2018",
     "project" => $projects[1],
     "done" => true
   ],
-  3 => [
+  [
     "task" => "Встреча с другом",
     "date" => "22.12.2018",
     "project" => $projects[0],
     "done" => false
   ],
-  4 => [
+  [
     "task" => "Купить корм для кота",
     "date" => "",
     "project" => $projects[3],
     "done" => false
   ],
-  5 => [
+  [
     "task" => "Заказать пиццу",
     "date" => "",
     "project" => $projects[3],
     "done" => false
   ]
 ];
-
 
 ?>
 <!DOCTYPE html>
@@ -88,9 +87,9 @@ $tasks = [
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                      <?php foreach ($projects as $key => $val): ?> 
+                      <?php foreach ($projects as $category): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#"><?php echo $val ?></a>
+                            <a class="main-navigation__list-item-link" href="#"><?php echo $category ?></a>
                             <span class="main-navigation__list-item-count">0</span>
                         </li>
                       <?php endforeach; ?> 
@@ -128,13 +127,13 @@ $tasks = [
                 </div>
 
                 <table class="tasks">
-                    <?php foreach ($tasks as $key => $val): ?> 
-                      <?php if (!$val["done"] || ($show_complete_tasks && $val["done"])): ?>
-                        <tr class="tasks__item task  <?php if ($val["done"] == true): ?>task--completed<?php endif; ?>">
+                    <?php foreach ($tasks as $task): ?> 
+                      <?php if (!$task["done"] || ($show_complete_tasks && $task["done"])): ?>
+                        <tr class="tasks__item task  <?php if ($task["done"] == true): ?>task--completed<?php endif; ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($val["done"] == true): ?>checked<?php endif; ?> value="1">
-                                    <span class="checkbox__text"><?=$val["task"]; ?></span>
+                                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["done"] == true): ?>checked<?php endif; ?> value="1">
+                                    <span class="checkbox__text"><?=$task["task"]; ?></span>
                                 </label>
                             </td>
 
@@ -142,7 +141,7 @@ $tasks = [
                                 <a class="download-link" href="#"></a>
                             </td>
 
-                            <td class="task__date"><?=$val["date"]; ?></td>
+                            <td class="task__date"><?=$task["date"]; ?></td>
                         </tr>
                       <?php endif; ?>
                     <?php endforeach; ?>
