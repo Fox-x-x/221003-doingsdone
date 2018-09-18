@@ -138,13 +138,13 @@ function countTasks($tasksArray, $projectName) {
                 </div>
 
                 <table class="tasks">
-                    <?php foreach ($tasks as $key => $val): ?> 
-                      <?php if (!$val["done"] || ($show_complete_tasks && $val["done"])): ?>
-                        <tr class="tasks__item task  <?php if ($val["done"] == true): ?>task--completed<?php endif; ?>">
+                    <?php foreach ($tasks as $task): ?> 
+                      <?php if (!$task["done"] || ($show_complete_tasks && $task["done"])): ?>
+                        <tr class="tasks__item task  <?php if ($task["done"] == true): ?>task--completed<?php endif; ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($val["done"] == true): ?>checked<?php endif; ?> value="1">
-                                    <span class="checkbox__text"><?=$val["task"]; ?></span>
+                                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["done"] == true): ?>checked<?php endif; ?> value="1">
+                                    <span class="checkbox__text"><?=$task["task"]; ?></span>
                                 </label>
                             </td>
 
@@ -152,7 +152,7 @@ function countTasks($tasksArray, $projectName) {
                                 <a class="download-link" href="#"></a>
                             </td>
 
-                            <td class="task__date"><?=$val["date"]; ?></td>
+                            <td class="task__date"><?=$task["date"]; ?></td>
                         </tr>
                       <?php endif; ?>
                     <?php endforeach; ?>
