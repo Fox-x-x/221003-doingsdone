@@ -14,7 +14,7 @@ $tasks = [
   ],
   [
     "task" => "Выполнить тестовое задание",
-    "date" => "25.12.2018",
+    "date" => "20.09.2018",
     "project" => $projects[2],
     "done" => false
   ],
@@ -44,9 +44,20 @@ $tasks = [
   ]
 ];
 
-$content = include_template("index.php", ["show_complete_tasks"=>$show_complete_tasks, "tasks"=>$tasks]);
+$content = include_template("index.php", [
+  "show_complete_tasks" => $show_complete_tasks,
+  "tasks"=>$tasks
+]);
+
 $title = "Дела в порядке";
-$layout = include_template("layout.php", ["content"=>$content, "title"=>$title, "projects"=>$projects, "tasks"=>$tasks, "countTasks"=>countTasks]);
+
+$layout = include_template("layout.php", [
+  "content" => $content,
+  "title" => $title,
+  "projects" => $projects,
+  "tasks" => $tasks
+]);
+
 print($layout);
 
 ?>
