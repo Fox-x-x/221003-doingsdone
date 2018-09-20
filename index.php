@@ -26,7 +26,7 @@ $tasks = [
   ],
   [
     "task" => "Встреча с другом",
-    "date" => "22.12.2018",
+    "date" => "20.09.2018",
     "project" => $projects[0],
     "done" => false
   ],
