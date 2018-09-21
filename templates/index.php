@@ -23,10 +23,21 @@
     </label>
 </div>
 
+
+<!-- Таблица со списком задач -->
 <table class="tasks">
     <?php foreach ($tasks as $task): ?> 
       <?php if (!$task["done"] || ($show_complete_tasks && $task["done"])): ?>
-        <tr class="tasks__item task  <?php if ($task["done"] == true): ?>task--completed<?php endif; ?>">
+
+        <tr class="tasks__item task
+
+            <?php
+              if ($task["done"] == true): ?> task--completed
+            <?php endif; ?>
+            <?php
+               if (isImportant($task["date"])): ?> task--important
+            <?php endif; ?>">
+
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["done"] == true): ?>checked<?php endif; ?> value="1">

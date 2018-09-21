@@ -29,4 +29,25 @@ function countTasks($tasksArray, $projectName) {
   return $tasksCounter;
 };
 
+
+function isImportant($task) {
+  date_default_timezone_set("Europe/Kaliningrad");
+
+  $result = false;
+
+  if (strtotime($task)) {
+    $endDate = strtotime($task);
+    $now = time();
+
+    $diff = $endDate - $now;
+    $hoursLeft = floor($diff / 3600);
+
+    if ($hoursLeft <= 24) {
+      $result = true;
+    }
+  }
+
+  return $result;
+};
+
 ?>
