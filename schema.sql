@@ -33,3 +33,4 @@ CREATE TABLE tasks (
 );
 
 CREATE INDEX task_name_index ON tasks (name) USING BTREE;
+CREATE INDEX task_date_index ON tasks (deadline) USING BTREE;
