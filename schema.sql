@@ -7,17 +7,17 @@ USE doingsdone;
 
 CREATE TABLE projects (
   id              INT AUTO_INCREMENT PRIMARY KEY,
-  name            CHAR(128),
+  name            VARCHAR(128),
   created_by_user INT
 );
 
 CREATE TABLE users (
   id        INT AUTO_INCREMENT PRIMARY KEY,
   reg_date  DATE,
-  email     CHAR(128),
-  name      CHAR(128),
-  password  CHAR(32),
-  contacts  CHAR
+  email     VARCHAR(128),
+  name      VARCHAR(128),
+  password  VARCHAR(32),
+  contacts  VARCHAR
 );
 
 CREATE TABLE tasks (
@@ -25,8 +25,8 @@ CREATE TABLE tasks (
   creation_date      DATETIME,
   date_of_completion DATETIME,
   status             TINYINT DEFAULT 0,
-  name               CHAR,
-  file               CHAR,
+  name               VARCHAR,
+  file               VARCHAR,
   deadline           DATETIME,
   created_by_user    INT,
   related_to_proj    INT
