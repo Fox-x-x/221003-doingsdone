@@ -17,7 +17,7 @@ CREATE TABLE users (
   email     VARCHAR(128),
   name      VARCHAR(128),
   password  VARCHAR(32),
-  contacts  VARCHAR
+  contacts  VARCHAR(256)
 );
 
 CREATE TABLE tasks (
@@ -25,8 +25,8 @@ CREATE TABLE tasks (
   creation_date      DATETIME,
   date_of_completion DATETIME,
   status             TINYINT DEFAULT 0,
-  name               VARCHAR,
-  file               VARCHAR,
+  name               VARCHAR(256),
+  file               VARCHAR(256),
   deadline           DATETIME,
   created_by_user    INT,
   related_to_proj    INT
