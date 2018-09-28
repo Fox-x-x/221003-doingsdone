@@ -27,21 +27,21 @@
 <!-- Таблица со списком задач -->
 <table class="tasks">
     <?php foreach ($tasks as $task): ?> 
-      <?php if (!$task["done"] || ($show_complete_tasks && $task["done"])): ?>
+      <?php if ($task["status"] == 0 || ($show_complete_tasks && $task["status"] == 1)): ?>
 
         <tr class="tasks__item task
 
             <?php
-              if ($task["done"] == true): ?> task--completed
+              if ($task["status"] == 1): ?> task--completed
             <?php endif; ?>
             <?php
-               if (isImportant($task["date"])): ?> task--important
+               if (isImportant($task["deadline"])): ?> task--important
             <?php endif; ?>">
 
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["done"] == true): ?>checked<?php endif; ?> value="1">
-                    <span class="checkbox__text"><?=strip_tags($task["task"]); ?></span>
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["status"] == 1): ?>checked<?php endif; ?> value="1">
+                    <span class="checkbox__text"><?=strip_tags($task["name"]); ?></span>
                 </label>
             </td>
 
@@ -49,7 +49,7 @@
                 <a class="download-link" href="#"></a>
             </td>
 
-            <td class="task__date"><?=$task["date"]; ?></td>
+            <td class="task__date"><?=$task["deadline"]; ?></td>
         </tr>
       <?php endif; ?>
     <?php endforeach; ?>

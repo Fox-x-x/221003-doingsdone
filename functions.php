@@ -1,5 +1,6 @@
 <?php
 
+// Шаблонизатор
 function include_template($name, $data) {
     $name = 'templates/' . $name;
     $result = '';
@@ -18,10 +19,11 @@ return $result;
 };
 
 
-function countTasks($tasksArray, $projectName) {
+// Считаем кол-во задач для определенного проекта
+function countTasks($tasks_array, $project_id) {
   $tasksCounter = 0;
-  foreach ($tasksArray as $task) {
-    if ($task["project"] === $projectName) {
+  foreach ($tasks_array as $task) {
+    if ($task["related_to_proj"] == $project_id) {
       $tasksCounter++;
     }
   };
@@ -30,6 +32,7 @@ function countTasks($tasksArray, $projectName) {
 };
 
 
+// Определяем является ли задача важной (до дэдлайна осталось менее 24 часов)
 function isImportant($task) {
   date_default_timezone_set("Europe/Kaliningrad");
 
@@ -48,6 +51,35 @@ function isImportant($task) {
   }
 
   return $result;
+};
+
+
+// Отправка запроса в БД и получение ответа в виде массива
+function sel_from_db_to_array($connect, $request) {
+
+  if ($connect == false) {
+     print("Ошибка подключения: " . mysqli_connect_error());
+  }
+  else {
+     mysqli_set_charset($connect, "utf8");
+
+     // Выполняем запрос и получаем результат
+     $result = mysqli_query($connect, $request);
+
+     // запрос выполнен успешно
+     if ($result) {
+         // получаем все категории в виде двумерного массива
+         $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
+     }
+     else {
+         // получить текст последней ошибки
+         $error = mysqli_error($connect);
+         // $content = include_template('error.php', ['error' => $error]);
+         print("Ошибка при выполнении запроса к БД: " . $error);
+     }
+  }
+
+  return $projects;
 };
 
 ?>
