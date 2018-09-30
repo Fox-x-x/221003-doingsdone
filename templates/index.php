@@ -27,20 +27,20 @@
 <!-- Таблица со списком задач -->
 <table class="tasks">
     <?php foreach ($tasks as $task): ?> 
-      <?php if ($task["status"] == 0 || ($show_complete_tasks && $task["status"] == 1)): ?>
+      <?php if (!$task["status"] || ($show_complete_tasks && $task["status"])): ?>
 
         <tr class="tasks__item task
 
             <?php
-              if ($task["status"] == 1): ?> task--completed
+              if ($task["status"]): ?> task--completed
             <?php endif; ?>
             <?php
-               if (isImportant($task["deadline"])): ?> task--important
+               if (is_important($task["deadline"])): ?> task--important
             <?php endif; ?>">
 
             <td class="task__select">
                 <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["status"] == 1): ?>checked<?php endif; ?> value="1">
+                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php if ($task["status"]): ?>checked<?php endif; ?> value="1">
                     <span class="checkbox__text"><?=strip_tags($task["name"]); ?></span>
                 </label>
             </td>
