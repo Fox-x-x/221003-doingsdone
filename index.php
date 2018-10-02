@@ -20,6 +20,13 @@ WHERE created_by_user = $user_id";
 $tasks = sel_from_db_to_array($connect, $request);
 
 
+/* Начинаем ебаться с урлами проектов */
+$scriptname = pathinfo(__FILE__, PATHINFO_BASENAME);
+echo $scriptname . "<br>";
+$id = $_GET["id"] ?? "undefined";
+echo $id;
+
+
 
 // Подключаем шаблон index и layout
 $content = include_template("index.php", [
