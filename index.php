@@ -18,14 +18,30 @@ $request = "SELECT id, creation_date, status, name, deadline, created_by_user, r
 FROM tasks
 WHERE created_by_user = $user_id";
 $tasks = sel_from_db_to_array($connect, $request);
+$initial_tasks = $tasks;
 
 
-/* Начинаем ебаться с урлами проектов */
-$scriptname = pathinfo(__FILE__, PATHINFO_BASENAME);
-echo $scriptname . "<br>";
-$id = $_GET["id"] ?? "undefined";
-echo $id;
 
+/* проверяем установлен ли идентификатор запроса и показываем соответствующие задачи */
+if (isset($_GET["id"])) {
+
+  $project_id = $_GET["id"];
+
+  /* Получаем список проектов */
+  $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id";
+  $projects = sel_from_db_to_array($connect, $request);
+
+  /* Получаем список задач */
+  $request = "SELECT id, creation_date, status, name, deadline, created_by_user, related_to_proj
+  FROM tasks
+  WHERE created_by_user = $user_id AND related_to_proj = $project_id";
+  $tasks = sel_from_db_to_array($connect, $request);
+
+} else {
+
+  $tasks = $initial_tasks;
+  
+}
 
 
 // Подключаем шаблон index и layout
@@ -40,9 +56,10 @@ $layout = include_template("layout.php", [
   "content" => $content,
   "title" => $title,
   "projects" => $projects,
-  "tasks" => $tasks
+  "tasks" => $tasks,
+  "initial_tasks" => $initial_tasks
 ]);
 
-print($layout);
+echo $layout;
 
 ?>
