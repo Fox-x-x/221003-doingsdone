@@ -21,7 +21,7 @@ INSERT INTO projects
 
 INSERT INTO projects
   SET name = "Учеба",
-      created_by_user = 2;
+      created_by_user = 3;
 
 INSERT INTO projects
   SET name = "Работа",
@@ -29,7 +29,7 @@ INSERT INTO projects
 
 INSERT INTO projects
   SET name = "Домашние дела",
-      created_by_user = 3;
+      created_by_user = 2;
 
 INSERT INTO projects
   SET name = "Авто",
@@ -43,7 +43,7 @@ INSERT INTO tasks
       status             = 0,
       name               = "Собеседование в IT компании",
       file               = "",
-      deadline           = "2018-12-01 00:00:00",
+      deadline           = "2018-09-26 00:00:00",
       created_by_user    = 3,
       related_to_proj    = 3;
 
@@ -68,7 +68,7 @@ INSERT INTO tasks
       related_to_proj    = 2;
 
 INSERT INTO tasks
-  SET creation_date      = "2018-09-22 11:36:03",
+  SET creation_date      = "2018-09-26 20:39:01",
       date_of_completion = null,
       status             = 0,
       name               = "Встреча с другом",

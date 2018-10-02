@@ -1,49 +1,27 @@
 <?php
 require("functions.php");
 
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
-$projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+$user_id = 2;
 
-$tasks = [
-   [
-    "task" => "Собеседование в IT компании",
-    "date" => "01.12.2018",
-    "project" => $projects[2],
-    "done" => false
-  ],
-  [
-    "task" => "Выполнить тестовое задание",
-    "date" => "20.09.2018",
-    "project" => $projects[2],
-    "done" => false
-  ],
-  [
-    "task" => "Сделать задание первого раздела",
-    "date" => "21.12.2018",
-    "project" => $projects[1],
-    "done" => true
-  ],
-  [
-    "task" => "Встреча с другом",
-    "date" => "20.09.2018",
-    "project" => $projects[0],
-    "done" => false
-  ],
-  [
-    "task" => "Купить корм для кота",
-    "date" => "",
-    "project" => $projects[3],
-    "done" => false
-  ],
-  [
-    "task" => "Заказать пиццу",
-    "date" => "",
-    "project" => $projects[3],
-    "done" => false
-  ]
-];
+// Подключаемся к БД
+$connect = mysqli_connect("localhost", "root", "root", "doingsdone");
 
+/* Получаем список проектов */
+$request = "SELECT id, name FROM projects WHERE created_by_user = $user_id";
+$projects = sel_from_db_to_array($connect, $request);
+
+/* Получаем список задач */
+$request = "SELECT id, creation_date, status, name, deadline, created_by_user, related_to_proj
+FROM tasks
+WHERE created_by_user = $user_id";
+$tasks = sel_from_db_to_array($connect, $request);
+
+
+
+// Подключаем шаблон index и layout
 $content = include_template("index.php", [
   "show_complete_tasks" => $show_complete_tasks,
   "tasks"=>$tasks
