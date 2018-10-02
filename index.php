@@ -37,10 +37,17 @@ if (isset($_GET["id"])) {
   WHERE created_by_user = $user_id AND related_to_proj = $project_id";
   $tasks = sel_from_db_to_array($connect, $request);
 
+  /* Если не нашли проекта с данным id, то вернем 404 ошибку */
+  if (!$tasks) {
+
+    echo "нету нихрена";
+    http_response_code(404);
+  }
+
 } else {
 
   $tasks = $initial_tasks;
-  
+
 }
 
 
