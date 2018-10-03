@@ -25,23 +25,24 @@ $initial_tasks = $tasks;
 /* проверяем установлен ли идентификатор запроса и показываем соответствующие задачи */
 if (isset($_GET["id"])) {
 
+  // ищем проекты с полученным из $_GET id
   $project_id = $_GET["id"];
-
-  /* Получаем список проектов */
-  $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id";
-  $projects = sel_from_db_to_array($connect, $request);
-
-  /* Получаем список задач */
-  $request = "SELECT id, creation_date, status, name, deadline, created_by_user, related_to_proj
-  FROM tasks
-  WHERE created_by_user = $user_id AND related_to_proj = $project_id";
-  $tasks = sel_from_db_to_array($connect, $request);
+  $request = "SELECT id, name FROM projects WHERE id = $project_id";
+  $projects_test = sel_from_db_to_array($connect, $request);
 
   /* Если не нашли проекта с данным id, то вернем 404 ошибку */
-  if (!$tasks) {
+  if (!$projects_test) {
 
     echo "нету нихрена";
     http_response_code(404);
+
+  } else {
+
+    /* В противном случае получаем список задач */
+    $request = "SELECT id, creation_date, status, name, deadline, created_by_user, related_to_proj
+    FROM tasks
+    WHERE created_by_user = $user_id AND related_to_proj = $project_id";
+    $tasks = sel_from_db_to_array($connect, $request);
   }
 
 } else {
