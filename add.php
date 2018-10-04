@@ -20,6 +20,7 @@ $initial_tasks = $tasks;
 
 // Подключаем шаблон index и layout
 $content = include_template("form-task.php", [
+  "projects" => $projects,
   "tasks"=>$tasks
 ]);
 
