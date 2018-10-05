@@ -21,8 +21,25 @@ $initial_tasks = $tasks;
 $added_task["name"] = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
- echo "sent";
- $added_task = $_POST;
+   echo "sent<br>";
+   $added_task = $_POST;
+
+   echo "POST:<br>";
+   var_dump($added_task);
+   echo "<br>";
+
+   $required = ["name", "project"];
+   $dict = ["name" => "Название задачи", "project" => "Выберите категорию"];
+
+   $errors = [];
+   foreach ($required as $key) {
+     if (empty($_POST[$key])) {
+            $errors[$key] = "Это поле надо заполнить";
+     }
+   }
+
+   echo "errors:<br>";
+   var_dump($errors);
 
 }
 

@@ -5,6 +5,11 @@
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
             <input class="form__input" type="text" name="name" id="name" value="<?=$added_task["name"]; ?>" placeholder="Введите название">
+            <p class="form__message">
+              <span class="error-message">
+                хуй
+              </span>
+            </p>
           </div>
 
           <div class="form__row">
