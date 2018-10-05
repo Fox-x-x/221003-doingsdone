@@ -18,10 +18,20 @@ $tasks = sel_from_db_to_array($connect, $request);
 $initial_tasks = $tasks;
 
 
+$added_task["name"] = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+ echo "sent";
+ $added_task = $_POST;
+
+}
+
+
 // Подключаем шаблон index и layout
 $content = include_template("form-task.php", [
   "projects" => $projects,
-  "tasks"=>$tasks
+  "tasks" => $tasks,
+  "added_task" => $added_task
 ]);
 
 $title = "Добавить задачу";
