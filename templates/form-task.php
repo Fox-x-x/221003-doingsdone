@@ -5,11 +5,15 @@
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
             <input class="form__input <?php if (isset($errors["name"])): ?>  form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=$added_task["name"]; ?>" placeholder="Введите название">
-            <!-- <p class="form__message">
-              <span class="error-message">
-                хуй
-              </span>
-            </p> -->
+
+            <?php if (isset($errors["name"])): ?>
+              <p class="form__message">
+                <span class="error-message">
+                  <?php echo $errors["name"]; ?>
+                </span>
+              </p>
+            <?php endif; ?>
+
           </div>
 
           <div class="form__row">
@@ -20,12 +24,21 @@
                 <option value="<?php echo strip_tags($project["name"]); ?>"><?php echo strip_tags($project["name"]); ?></option>
               <?php endforeach; ?>
             </select>
+
+            <?php if (isset($errors["project"])): ?>
+              <p class="form__message">
+                <span class="error-message">
+                  <?php echo $errors["project"]; ?>
+                </span>
+              </p>
+            <?php endif; ?>
+
           </div>
 
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-            <input class="form__input form__input--date" type="date" name="date" id="date" value="" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+            <input class="form__input form__input--date" type="date" name="date" id="date" value="<?php echo $added_task["date"]; ?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
           </div>
 
           <div class="form__row">

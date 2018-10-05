@@ -26,6 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    echo "sent<br>";
    $added_task = $_POST;
 
+   if (isset($_FILES["preview"])) {
+     echo "FILE!!!<br>";
+   } else {
+     echo "NO File<br>";
+   }
+
    echo "POST:<br>";
    var_dump($added_task);
    echo "<br>";
@@ -39,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors[$key] = "Это поле надо заполнить";
      }
    }
+
 
    echo "errors:<br>";
    var_dump($errors);
