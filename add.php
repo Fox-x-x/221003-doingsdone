@@ -19,6 +19,8 @@ $initial_tasks = $tasks;
 
 
 $added_task["name"] = "";
+
+// Проверяем отправку формы и валидируем, если отправлена
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
    echo "sent<br>";
@@ -41,6 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    echo "errors:<br>";
    var_dump($errors);
 
+   // Если ошибок нет, то сохраняем
+   if (!empty($errors)) {
+
+   }
+
 }
 
 
@@ -48,7 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $content = include_template("form-task.php", [
   "projects" => $projects,
   "tasks" => $tasks,
-  "added_task" => $added_task
+  "added_task" => $added_task,
+  "errors" => $errors
 ]);
 
 $title = "Добавить задачу";
