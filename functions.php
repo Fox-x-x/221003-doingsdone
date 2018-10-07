@@ -83,4 +83,33 @@ function sel_from_db_to_array($connect, $request) {
   return $result_array;
 };
 
+
+// Запись в БД
+function insert_into_db($connect, $request) {
+
+  $result = true;
+
+  if ($connect == false) {
+     print("Ошибка подключения: " . mysqli_connect_error());
+     $result = false;
+  }
+  else {
+     mysqli_set_charset($connect, "utf8");
+
+     // Выполняем запрос и получаем результат
+     $mysq_result = mysqli_query($connect, $request);
+
+     // если запрос НЕ выполнился
+     if (!$mysq_result) {
+
+         $error = mysqli_error($connect);
+         print("Ошибка при выполнении запроса к БД: " . $error);
+         $result = false;
+     }
+
+  }
+
+  return $result;
+};
+
 ?>

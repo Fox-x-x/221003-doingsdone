@@ -1,7 +1,7 @@
       <main class="content__main">
         <h2 class="content__main-heading">Добавление задачи</h2>
 
-        <form class="form"  action="/add.php" method="post">
+        <form class="form" enctype="multipart/form-data" action="/add.php" method="post">
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
             <input class="form__input <?php if (isset($errors["name"])): ?>  form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=$added_task["name"]; ?>" placeholder="Введите название">
@@ -21,7 +21,7 @@
 
             <select class="form__input form__input--select" name="project" id="project">
               <?php foreach ($projects as $project): ?> 
-                <option value="<?php echo strip_tags($project["name"]); ?>"><?php echo strip_tags($project["name"]); ?></option>
+                <option value="<?php echo strip_tags($project["id"]); ?>"><?php echo strip_tags($project["name"]); ?></option>
               <?php endforeach; ?>
             </select>
 
