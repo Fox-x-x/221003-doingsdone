@@ -20,7 +20,7 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="pages/form-task.html">Добавить задачу</a>
+                <a class="main-header__side-item button button--plus open-modal" href="/add.php">Добавить задачу</a>
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
@@ -44,7 +44,7 @@
                     <ul class="main-navigation__list">
                       <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="?id=<?php echo $project["id"]; ?>"><?php echo strip_tags($project["name"]); ?></a>
+                            <a class="main-navigation__list-item-link" href="/index.php?id=<?php echo $project["id"]; ?>"><?php echo strip_tags($project["name"]); ?></a>
                             <span class="main-navigation__list-item-count"><?php echo count_tasks($initial_tasks, $project["id"]); ?></span>
                         </li>
                       <?php endforeach; ?> 
