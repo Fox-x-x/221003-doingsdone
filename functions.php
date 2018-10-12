@@ -119,10 +119,10 @@ function check_email_for_existence($email, $connect) {
   $result = false;
 
   if ($connect == false) {
-       print("Ошибка подключения: " . mysqli_connect_error());
+          print("Ошибка подключения: " . mysqli_connect_error());
     }
     else {
-      mysqli_set_charset($connect, "utf8");
+          mysqli_set_charset($connect, "utf8");
 
           $request = "SELECT id, email FROM users WHERE email = '$email' ";
           // Выполняем запрос и получаем результат
@@ -146,6 +146,7 @@ function check_email_for_existence($email, $connect) {
 }
 
 
+
 // валидация формы регистрации
 function validate_reg_form($connect, $email, $required, $user) {
 
@@ -167,6 +168,111 @@ function validate_reg_form($connect, $email, $required, $user) {
   foreach ($required as $key) {
     if (empty($user[$key])) {
         $errors[$key] = "Это поле надо заполнить";
+    }
+  }
+
+  return $errors;
+}
+
+
+// проверка пароля
+function check_password($user, $connect) {
+
+  $result = false;
+
+  if ($connect == false) {
+    print("Ошибка подключения: " . mysqli_connect_error());
+
+  } else {
+    mysqli_set_charset($connect, "utf8");
+
+    $email = $user["email"];
+    $request = "SELECT * FROM users WHERE email = '$email' ";
+
+    // Выполняем запрос и получаем результат
+    $mysq_result = mysqli_query($connect, $request);
+    $result_array = mysqli_fetch_array($mysq_result, MYSQLI_ASSOC);
+
+
+    // если запрос НЕ выполнился
+    if (!$mysq_result) {
+
+      $error = mysqli_error($connect);
+      print("Ошибка при выполнении запроса к БД: " . $error);
+
+    } else {
+
+      if ( password_verify($user["password"], $result_array["password"]) ) {
+        $result = true;
+      }
+    }
+
+  }
+
+  return $result;
+}
+
+
+// возвращает аутентифицированного юзера из БД
+function get_auth_user($connect, $user) {
+
+  $result = [];
+
+  if ($connect == false) {
+    print("Ошибка подключения: " . mysqli_connect_error());
+
+  } else {
+    mysqli_set_charset($connect, "utf8");
+
+    $email = $user["email"];
+    $request = "SELECT * FROM users WHERE email = '$email' ";
+
+    // Выполняем запрос и получаем результат
+    $mysq_result = mysqli_query($connect, $request);
+
+
+    // если запрос НЕ выполнился
+    if (!$mysq_result) {
+
+      $error = mysqli_error($connect);
+      print("Ошибка при выполнении запроса к БД: " . $error);
+
+    } else {
+
+      $result = mysqli_fetch_array($mysq_result, MYSQLI_ASSOC);
+
+    }
+
+  }
+
+  return $result;
+}
+
+
+// валидация формы аутентификации
+function validate_auth_form($connect, $required, $user) {
+
+  $errors = [];
+
+  // проверяем email на валидность и записываем ошибку + проверяем на существование такоего email в базе
+  if ( (!empty($user["password"])) && (!empty($user["email"])) ) {
+
+    if (!check_email_for_existence($user["email"], $connect)) {
+      $errors["email"] = "Неверный email";
+    }
+
+    if ( !check_password($user, $connect)) {
+      $errors["password"] = "Неверный пароль";
+    }
+
+
+  } else {
+
+    // проверяем все ли поля заполнены
+    foreach ($required as $key) {
+      if (empty($user[$key])) {
+          $errors[$key] = "Это поле надо заполнить";
+      }
     }
   }
 
