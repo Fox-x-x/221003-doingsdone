@@ -4,7 +4,7 @@
         <form class="form" enctype="multipart/form-data" action="/add.php" method="post">
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
-            <input class="form__input <?php if (isset($errors["name"])): ?>  form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=$added_task["name"]; ?>" placeholder="Введите название">
+            <input class="form__input <?php if (isset($errors["name"])): ?>  form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=strip_tags($added_task["name"]); ?>" placeholder="Введите название">
 
             <?php if (isset($errors["name"])): ?>
               <p class="form__message">
@@ -38,7 +38,7 @@
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-            <input class="form__input form__input--date" type="date" name="date" id="date" value="<?php echo $added_task["date"]; ?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+            <input class="form__input form__input--date" type="date" name="date" id="date" value="<?php echo strip_tags($added_task["date"]); ?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
           </div>
 
           <div class="form__row">

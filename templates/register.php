@@ -14,7 +14,7 @@
   <div class="page-wrapper">
     <div class="container container--with-sidebar">
       <header class="main-header">
-        <a href="/index.php">
+        <a href="/">
           <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
         </a>
 
@@ -37,7 +37,7 @@
             <div class="form__row">
               <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
-              <input class="form__input <?php if (isset($errors["email"])): ?>  form__input--error<?php endif; ?>" type="text" name="email" id="email" value="<?=$reg_user["email"]; ?>" placeholder="Введите e-mail">
+              <input class="form__input <?php if (isset($errors["email"])): ?>  form__input--error<?php endif; ?>" type="text" name="email" id="email" value="<?=strip_tags($reg_user["email"]); ?>" placeholder="Введите e-mail">
               <?php if (isset($errors["email"])): ?>
                 <p class="form__message"><?php echo $errors["email"]; ?></p>
               <?php endif; ?>
@@ -46,7 +46,7 @@
             <div class="form__row">
               <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
-              <input class="form__input <?php if (isset($errors["password"])): ?>  form__input--error<?php endif; ?>" type="password" name="password" id="password" value="<?=$reg_user["password"]; ?>" placeholder="Введите пароль">
+              <input class="form__input <?php if (isset($errors["password"])): ?>  form__input--error<?php endif; ?>" type="password" name="password" id="password" value="<?=strip_tags($reg_user["password"]); ?>" placeholder="Введите пароль">
               <?php if (isset($errors["password"])): ?>
                 <p class="form__message"><?php echo $errors["password"]; ?></p>
               <?php endif; ?>
@@ -55,7 +55,7 @@
             <div class="form__row">
               <label class="form__label" for="name">Имя <sup>*</sup></label>
 
-              <input class="form__input <?php if (isset($errors["name"])): ?>  form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=$reg_user["name"]; ?>" placeholder="Введите имя">
+              <input class="form__input <?php if (isset($errors["name"])): ?>  form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=strip_tags($reg_user["name"]); ?>" placeholder="Введите имя">
               <?php if (isset($errors["name"])): ?>
                 <p class="form__message"><?php echo $errors["name"]; ?></p>
               <?php endif; ?>
