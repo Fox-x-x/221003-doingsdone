@@ -34,6 +34,9 @@ $added_task["name"] = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
    $added_task = $_POST;
+   $added_task["name"] = mysqli_real_escape_string($connect, $_POST["name"]);
+   $added_task["project"] = mysqli_real_escape_string($connect, $_POST["project"]);
+   $added_task["date"] = mysqli_real_escape_string($connect, $_POST["date"]);
 
    $required = ["name", "project"];
 
@@ -51,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
      $file_name = $_FILES["preview"]["name"];
      $file_path = __DIR__ . "/";
-     $file_url = $file_name;
+     $file_url = $file_path . $file_name;
 
      $save_file = true;
 
