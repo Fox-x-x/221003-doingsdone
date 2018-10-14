@@ -18,7 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Если ошибок нет, то сохраняем и перенаправляем на главную
   if (empty($errors)) {
-    echo "всё ок:)<br>";
 
     $now = date("Y-m-d H:i:s");
     $user_email = $reg_user["email"];

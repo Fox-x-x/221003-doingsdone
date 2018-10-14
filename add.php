@@ -1,7 +1,17 @@
 <?php
 require("functions.php");
 
-$user_id = 2;
+
+
+session_start();
+if (!isset($_SESSION["user"])) {
+    header('HTTP/1.0 403 Forbidden');
+    exit();
+}
+
+$user_id = $_SESSION["user"]["id"];
+
+
 
 // Подключаемся к БД
 $connect = mysqli_connect("localhost", "root", "root", "doingsdone");
