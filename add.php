@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                status             = 0,
                                name               = '$added_name',
                                file               = '$added_file',
-                               deadline           = '$added_date',
+                               deadline           =  $added_date,
                                created_by_user    = '$user_id',
                                related_to_proj    = '$added_project'";
 
