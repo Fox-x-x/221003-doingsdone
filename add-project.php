@@ -1,8 +1,8 @@
 <?php
+session_start();
 require("functions.php");
 
 
-session_start();
 if (!isset($_SESSION["user"])) {
     header('HTTP/1.0 403 Forbidden');
     exit();
@@ -11,7 +11,7 @@ if (!isset($_SESSION["user"])) {
 $user_id = $_SESSION["user"]["id"];
 
 // Подключаемся к БД
-$connect = mysqli_connect("localhost", "root", "root", "doingsdone");
+$connect = get_connect_db();
 
 /* Получаем список проектов */
 $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id";
@@ -28,7 +28,7 @@ $initial_tasks = $tasks;
 $added_project["name"] = "";
 
 // Проверяем отправку формы и валидируем, если отправлена
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if (!empty($_POST)) {
 
    $added_project = $_POST;
 
@@ -79,7 +79,5 @@ $layout = include_template("layout.php", [
 ]);
 
 echo $layout;
-
-
 
 ?>

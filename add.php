@@ -14,7 +14,7 @@ $user_id = $_SESSION["user"]["id"];
 
 
 // Подключаемся к БД
-$connect = mysqli_connect("localhost", "root", "root", "doingsdone");
+$connect = get_connect_db();
 
 /* Получаем список проектов */
 $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id";
@@ -74,22 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      $added_project = $added_task["project"];
      $now = date("Y-m-d H:i:s");
      $added_date = $added_task["date"];
-
-     // если задача без даты, то приходится колхозить
-     if ($added_date === "") {
-       $added_date = "null";
-       $insert_request = "INSERT INTO tasks
-                           SET creation_date      = '$now',
-                               date_of_completion = null,
-                               status             = 0,
-                               name               = '$added_name',
-                               file               = '$added_file',
-                               deadline           =  $added_date,
-                               created_by_user    = '$user_id',
-                               related_to_proj    = '$added_project'";
-
-     } else {
-       $insert_request = "INSERT INTO tasks
+     $added_date = $added_task["date"] ? "'$added_date'" : 'null';
+     $insert_request = "INSERT INTO tasks
                            SET creation_date      = '$now',
                                date_of_completion = null,
                                status             = 0,
@@ -98,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                deadline           = '$added_date',
                                created_by_user    = '$user_id',
                                related_to_proj    = '$added_project'";
-     }
+
 
 
      $insert_result = insert_into_db($connect, $insert_request);

@@ -16,7 +16,7 @@ CREATE TABLE users (
   reg_date  DATE,
   email     VARCHAR(128),
   name      VARCHAR(128),
-  password  VARCHAR(32),
+  password  VARCHAR(255),
   contacts  VARCHAR(256)
 );
 

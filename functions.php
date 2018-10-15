@@ -1,5 +1,10 @@
 <?php
 
+
+function get_connect_db() {
+    return mysqli_connect("127.0.0.1", "root", "1234567", "fox");
+}
+
 // Шаблонизатор
 function include_template($name, $data) {
     $name = 'templates/' . $name;
