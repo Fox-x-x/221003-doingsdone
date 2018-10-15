@@ -56,7 +56,7 @@
                 </nav>
 
                 <a class="button button--transparent button--plus content__side-button"
-                   href="pages/form-project.html" target="project_add">Добавить проект</a>
+                   href="/add-project.php" >Добавить проект</a>
               <?php else: ?>
                 <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
                 <a class="button button--transparent content__side-button" href="auth.php">Войти</a>
@@ -79,7 +79,7 @@
         </div>
 
         <?php if (isset($_SESSION["user"]))
-          print('<a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>');
+          print('<a class="main-footer__button button button--plus" href="/add.php">Добавить задачу</a>');
         ?>
 
         <div class="main-footer__social social">

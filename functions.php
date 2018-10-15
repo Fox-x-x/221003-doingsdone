@@ -1,5 +1,10 @@
 <?php
 
+
+function get_connect_db() {
+    return mysqli_connect("localhost", "root", "root", "doingsdone");
+}
+
 // Шаблонизатор
 function include_template($name, $data) {
     $name = 'templates/' . $name;
@@ -82,6 +87,8 @@ function sel_from_db_to_array($connect, $request) {
 
   return $result_array;
 };
+
+
 
 
 // Запись в БД
@@ -274,6 +281,85 @@ function validate_auth_form($connect, $required, $user) {
           $errors[$key] = "Это поле надо заполнить";
       }
     }
+  }
+
+  return $errors;
+}
+
+
+// создаем ссылку с соответствующими параметрами для блока сортировки задач
+function make_link($parameter, $value) {
+    $url = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $url_parts = parse_url($url);
+    $result = 'http://'.$_SERVER['HTTP_HOST'].'/';
+    if (isset($url_parts['query'])) {
+        parse_str($url_parts['query'], $params);
+        if ($value) {
+            $params[$parameter] = $value;
+        }
+        else {
+            unset($params[$parameter]);
+        }
+        $url_parts['query'] = http_build_query($params);
+        if (!empty($url_parts['query'])) {
+            $result = '?' . $url_parts['query'];
+        }
+    }
+    elseif ($value) {
+        $result = 'http://'.$_SERVER['HTTP_HOST'].'/index.php?'.$parameter.'=' . $value;
+    }
+    return $result;
+}
+
+
+// проверяет существование проекта в БД (нужно для добавления нового проекта)
+function check_project_for_existence($connect, $name, $user_id) {
+
+  $result = false;
+
+  if ($connect == false) {
+    print("Ошибка подключения: " . mysqli_connect_error());
+
+  } else {
+    mysqli_set_charset($connect, "utf8");
+
+    $request = "SELECT * FROM projects WHERE name = '$name' AND created_by_user = '$user_id' ";
+
+    // Выполняем запрос и получаем результат
+    $mysq_result = mysqli_query($connect, $request);
+
+
+    // если запрос НЕ выполнился
+    if (!$mysq_result) {
+
+      $error = mysqli_error($connect);
+      print("Ошибка при выполнении запроса к БД: " . $error);
+
+    }
+
+    // если запрос выполнился и вернул ненулевое кол-во строк, то проект существует
+    if ( $mysq_result->num_rows > 0 ) {
+      $result = true;
+    }
+
+  }
+
+
+  return $result;
+}
+
+
+// валидация формы добавления нового проекта
+function validate_project_form($connect, $project, $user_id) {
+
+  $errors = [];
+
+  if ( !empty($project["name"]) ) {
+    if (check_project_for_existence($connect, $project["name"], $user_id)) {
+      $errors["name"] = "Проект с таким именем уже существует";
+    }
+  } else {
+    $errors["name"] = "Это поле надо заполнить";
   }
 
   return $errors;

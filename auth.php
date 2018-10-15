@@ -2,26 +2,28 @@
 require("functions.php");
 
 
-$connect = mysqli_connect("localhost", "root", "root", "doingsdone");
+$connect = get_connect_db();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (!empty($_POST)) {
 
-  $user = $_POST;
+  $data = $_POST;
+  $data["email"] = mysqli_real_escape_string($connect, $data["email"]);
 
   $required = ["email", "password"];
   $errors = [];
 
   // валидируем форму
-  $errors = validate_auth_form($connect, $required, $user);
+  if (strlen($data["email"])) {
+    $errors = validate_auth_form($connect, $required, $data);
+  }
+
 
   // если ошибок нет, то записываем в сессию информацию о юзере
   if (empty($errors)) {
 
-    $auth_user = get_auth_user($connect, $user);
+    $auth_user = get_auth_user($connect, $data);
     session_start();
     $_SESSION["user"] = $auth_user;
-    echo "session<br>";
-    var_dump($_SESSION["user"]);
     header("Location: /");
     exit();
   }
@@ -36,15 +38,12 @@ $title = "Дела в порядке: вход";
 
 $content = include_template("auth.php", [
   "errors" => $errors,
-  "user" => $user
+  "user" => $data
 ]);
 
 $layout = include_template("layout.php", [
   "content" => $content,
   "title" => $title
-  // "projects" => $projects,
-  // "tasks" => $tasks,
-  // "initial_tasks" => $initial_tasks
 ]);
 
 echo $layout;

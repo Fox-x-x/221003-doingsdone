@@ -3,7 +3,7 @@ require("functions.php");
 
 
 // Проверяем отправку формы и валидируем, если отправлена
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (!empty($_POST)) {
 
   $reg_user = $_POST;
 
@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $errors = [];
 
   // проверяем email на валидность и записываем ошибку + проверяем на существование такоего email в базе
-  $connect = mysqli_connect("localhost", "root", "root", "doingsdone");
+  $connect = get_connect_db();
   $errors = validate_reg_form($connect, $reg_user["email"], $required, $reg_user);
 
 
