@@ -1,77 +1,137 @@
 <?php
+session_start();
+
+
 require("functions.php");
 
 
 // показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+if (isset($_GET["show_completed"])) {
 
-// Подключаемся к БД
-$connect = mysqli_connect("localhost", "root", "root", "doingsdone");
+  $show_complete_tasks = $_GET["show_completed"];
+  
+  // анти-инъекция
+  settype($show_complete_tasks, 'integer');
+  $_SESSION["user"]["show_completed"] = $_GET["show_completed"];
 
-
-session_start();
-
-if ($connect && isset($_SESSION["user"])) {
-
-  $user_id = $_SESSION["user"]["id"];
-
-  /* Получаем список проектов */
-  $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id";
-  $projects = sel_from_db_to_array($connect, $request);
-
-  /* Получаем список задач */
-  $request = "SELECT id, creation_date, status, name, deadline, created_by_user, related_to_proj
-  FROM tasks
-  WHERE created_by_user = $user_id";
-  $tasks = sel_from_db_to_array($connect, $request);
-  $initial_tasks = $tasks;
-
-
-  /* проверяем установлен ли идентификатор запроса и показываем соответствующие задачи */
-  if (isset($_GET["id"])) {
-
-    // Ищем проекты с полученным из $_GET id
-    // Нужно будет потом защититься от инъекций (!)
-    $project_id = $_GET["id"];
-    $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id AND id = $project_id";
-    $projects_test = sel_from_db_to_array($connect, $request);
-
-    /* Если не нашли проекта с данным id, то вернем 404 ошибку */
-    if (!$projects_test) {
-
-      echo "нету нихрена";
-      http_response_code(404);
-      die();
-
-    } else {
-
-      /* В противном случае получаем список задач */
-      $request = "SELECT id, creation_date, status, name, deadline, created_by_user, related_to_proj
-      FROM tasks
-      WHERE created_by_user = $user_id AND related_to_proj = $project_id";
-      $tasks = sel_from_db_to_array($connect, $request);
-    }
-
-  } else {
-
-    $tasks = $initial_tasks;
-
-  }
-}
-
-
-
-// Подключаем шаблон index и layout
-if (isset($_SESSION["user"])) {
-  $content = include_template("index.php", [
-    "show_complete_tasks" => $show_complete_tasks,
-    "tasks" => $tasks
-  ]);
 } else {
-  $content = include_template("guest.php",[]);
+    $show_complete_tasks = $_SESSION["show_completed"] ?? 1;
 }
 
 $title = "Дела в порядке";
+
+// Подключаемся к БД
+$connect = get_connect_db();
+
+if (!$connect) {
+   echo "Error!!! Not connect to DB.";
+   exit;
+}
+
+if (empty($_SESSION['user'])) {
+
+  $content = include_template("guest.php",[]);
+
+  $layout = include_template("layout.php", [
+    "content" => $content,
+    "title" => $title,
+    "projects" => [],
+    "tasks" => [],
+    "initial_tasks" => []
+  ]);
+  echo $layout;
+  exit;
+}
+
+
+
+$user_id = $_SESSION["user"]["id"];
+
+/* Получаем список проектов */
+$request = "SELECT id, name FROM projects WHERE created_by_user = $user_id ";
+$projects = sel_from_db_to_array($connect, $request);
+
+/* Получаем список задач */
+$request = "SELECT *
+FROM tasks
+WHERE created_by_user = $user_id
+ORDER BY creation_date DESC ";
+$tasks = sel_from_db_to_array($connect, $request);
+$initial_tasks = $tasks;
+
+
+
+$project_id = $_GET['id'] ?? null;
+settype($project_id, 'integer');
+if (!empty($project_id)) {
+  $request = "SELECT id, name FROM projects WHERE created_by_user = $user_id AND id = $project_id";
+  $project = sel_from_db_to_array($connect, $request)[0];
+  if (!$project) {
+    echo "нету нихрена";
+    http_response_code(404);
+    exit;
+  }
+}
+
+$request = 'SELECT * FROM `tasks` WHERE `created_by_user` = '. $user_id;
+
+if (!empty($project)) {
+  $request .= ' AND `related_to_proj` = '. $project['id'];
+}
+
+/* проверяем установлен ли идентификатор для фильтрации задач */
+if ( !empty($_GET["date"]) ) {
+    // защищаемся от инъекций
+    $filter_date = mysqli_real_escape_string($connect, $_GET["date"]);
+    switch ($filter_date) {
+        case 'today' : {
+          $request.= ' AND `deadline` >= CURRENT_DATE AND `deadline` < date_add(CURRENT_DATE, INTERVAL 1 day)';
+          break;
+        }
+        case 'tomorrow' : {
+          $request.= ' AND `deadline` >= date_add(CURRENT_DATE, INTERVAL 1 day) AND `deadline` < date_add(CURRENT_DATE, INTERVAL 2 day);';
+          break;
+        }
+        case 'overdue': {
+            $request.= ' AND `deadline` < CURRENT_DATE';
+            break;
+        }
+    }
+
+}
+$tasks = sel_from_db_to_array($connect, $request);
+
+// Выполнение задачи
+if (isset($_GET["task_id"], $_GET["check"])) {
+
+  $task_ids = array_column($tasks, "id");
+  $task_id = $_GET["task_id"];
+  $task_status = $_GET["check"];
+
+  // Защищаемся от SQL-инъекций
+  settype($task_id, 'integer');
+  settype($task_status, 'boolean');
+
+  // Если task_id пуст, либо если по этому id у юзера не нашли ни одной задачи, то возвращаем 404
+  if (!in_array($task_id, $task_ids) ) {
+      header("HTTP/1.1 404 Not Found");
+      exit();
+  }
+
+  $dateOfCompletion = $task_status ? 'NOW()' : 'NULL';
+  $sql = "UPDATE tasks
+             SET status = 1,
+                 date_of_completion = $dateOfCompletion
+             WHERE id = " . $task_id;
+  $result_sql = insert_into_db($connect, $sql);
+
+  exit();
+}
+
+$content = include_template("index.php", [
+  "show_complete_tasks" => $show_complete_tasks,
+  "tasks" => $tasks
+]);
 
 $layout = include_template("layout.php", [
   "content" => $content,
