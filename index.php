@@ -15,7 +15,9 @@ if (isset($_GET["show_completed"])) {
   $_SESSION["user"]["show_completed"] = $_GET["show_completed"];
 
 } else {
-    $show_complete_tasks = $_SESSION["show_completed"] ?? 1;
+
+    $show_complete_tasks = $_SESSION["user"]["show_completed"] ?? 1;
+
 }
 
 $title = "Дела в порядке";
@@ -24,10 +26,11 @@ $title = "Дела в порядке";
 $connect = get_connect_db();
 
 if (!$connect) {
-   echo "Error!!! Not connect to DB.";
+   echo "Error!!! Unable to connect to DB.";
    exit;
 }
 
+// Если сессия пустая, то отправляем юзера на страницу логина/регистрации
 if (empty($_SESSION['user'])) {
 
   $content = include_template("guest.php",[]);
@@ -60,7 +63,7 @@ $tasks = sel_from_db_to_array($connect, $request);
 $initial_tasks = $tasks;
 
 
-
+// Если прилетел id проекта, значит кликнули по проектам и нужно показать соответствующие проекту задачи
 $project_id = $_GET['id'] ?? null;
 settype($project_id, 'integer');
 if (!empty($project_id)) {
