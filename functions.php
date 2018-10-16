@@ -2,7 +2,7 @@
 
 
 function get_connect_db() {
-    return mysqli_connect("127.0.0.1", "root", "1234567", "fox");
+    return mysqli_connect("localhost", "root", "root", "doingsdone");
 }
 
 // Шаблонизатор
