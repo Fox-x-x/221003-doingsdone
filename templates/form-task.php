@@ -19,7 +19,7 @@
           <div class="form__row">
             <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-            <select class="form__input form__input--select" name="project" id="project">
+            <select class="form__input form__input--select<?php if (isset($errors["project"])): ?>  form__input--error<?php endif; ?>" name="project" id="project">
               <?php foreach ($projects as $project): ?> 
                 <option value="<?php echo strip_tags($project["id"]); ?>"><?php echo strip_tags($project["name"]); ?></option>
               <?php endforeach; ?>
@@ -38,7 +38,15 @@
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-            <input class="form__input form__input--date" type="date" name="date" id="date" value="<?php echo strip_tags($added_task["date"]); ?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+            <input class="form__input form__input--date <?php if (isset($errors["date"])): ?>  form__input--error<?php endif; ?>" type="date" name="date" id="date" value="<?php echo strip_tags($added_task["date"]); ?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+
+            <?php if (isset($errors["date"])): ?>
+              <p class="form__message">
+                <span class="error-message">
+                  <?php echo $errors["date"]; ?>
+                </span>
+              </p>
+            <?php endif; ?>
           </div>
 
           <div class="form__row">

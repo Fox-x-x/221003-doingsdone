@@ -153,6 +153,39 @@ function check_email_for_existence($email, $connect) {
 }
 
 
+// проверка существоавания проекта в БД
+function check_proj_for_existence($project_id, $connect, $user_id) {
+
+  $result = false;
+
+  if ($connect == false) {
+          print("Ошибка подключения: " . mysqli_connect_error());
+    }
+    else {
+          mysqli_set_charset($connect, "utf8");
+
+          $request = "SELECT * FROM projects WHERE id = '$project_id' AND created_by_user = '$user_id' ";
+          // Выполняем запрос и получаем результат
+          $mysq_result = mysqli_query($connect, $request);
+
+          // если запрос НЕ выполнился
+          if (!$mysq_result) {
+
+              $error = mysqli_error($connect);
+              print("Ошибка при выполнении запроса к БД: " . $error);
+          }
+
+          // если запрос выполнился и вернул ненулевое кол-во строк, то проект существует
+          if ( $mysq_result->num_rows > 0 ) {
+            $result = true;
+          }
+    }
+
+    return $result;
+
+}
+
+
 
 // валидация формы регистрации
 function validate_reg_form($connect, $email, $required, $user) {
@@ -287,6 +320,39 @@ function validate_auth_form($connect, $required, $user) {
 }
 
 
+// валидация формы добавления задачи
+function validate_task_form($connect, $task, $user_id) {
+
+    $errors = [];
+
+    $task["name"] = mysqli_real_escape_string($connect, $task["name"]);
+    $task["project"] = mysqli_real_escape_string($connect, $task["project"]);
+    $task["date"] = mysqli_real_escape_string($connect, $task["date"]);
+
+    // проверяем дату
+    if (!empty($task["date"])) {
+        if ($task["date"] < date("Y-m-d")) {
+            $errors["date"] = "Дата не должна быть из прошлого";
+        }
+    }
+
+    // проверяем существует ли проект
+    if (!empty($task["project"])) {
+      if (!check_proj_for_existence($task["project"], $connect, $user_id)) {
+        $errors["project"] = "Такого проекта не существует";
+      }
+    }
+
+    if (empty($task["name"])) {
+      $errors["name"] = "Это поле надо заполнить";
+    }
+
+
+    return $errors;
+
+}
+
+
 // создаем ссылку с соответствующими параметрами для блока сортировки задач
 function make_link($parameter, $value) {
     $url = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -363,6 +429,43 @@ function validate_project_form($connect, $project, $user_id) {
   }
 
   return $errors;
+}
+
+
+// проверяем есть ли файл с таким именем в директории
+function check_file_for_existence($connect, $name, $user_id) {
+
+  $result = false;
+
+  if ($connect == false) {
+    print("Ошибка подключения: " . mysqli_connect_error());
+
+  } else {
+    mysqli_set_charset($connect, "utf8");
+
+    $request = "SELECT * FROM tasks WHERE file = '$name' AND created_by_user = '$user_id' ";
+
+    // Выполняем запрос и получаем результат
+    $mysq_result = mysqli_query($connect, $request);
+
+
+    // если запрос НЕ выполнился
+    if (!$mysq_result) {
+
+      $error = mysqli_error($connect);
+      print("Ошибка при выполнении запроса к БД: " . $error);
+
+    }
+
+    // если запрос выполнился и вернул ненулевое кол-во строк, то проект существует
+    if ( $mysq_result->num_rows > 0 ) {
+      $result = true;
+    }
+
+  }
+
+
+  return $result;
 }
 
 ?>

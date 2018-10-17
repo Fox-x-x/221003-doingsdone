@@ -1,9 +1,10 @@
 <?php
+session_start();
 require("functions.php");
 
 
 
-session_start();
+
 if (!isset($_SESSION["user"])) {
     header('HTTP/1.0 403 Forbidden');
     exit();
@@ -31,21 +32,13 @@ $initial_tasks = $tasks;
 $added_task["name"] = "";
 
 // Проверяем отправку формы и валидируем, если отправлена
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (!empty($_POST)) {
 
    $added_task = $_POST;
-   $added_task["name"] = mysqli_real_escape_string($connect, $_POST["name"]);
-   $added_task["project"] = mysqli_real_escape_string($connect, $_POST["project"]);
-   $added_task["date"] = mysqli_real_escape_string($connect, $_POST["date"]);
-
-   $required = ["name", "project"];
 
    $errors = [];
-   foreach ($required as $key) {
-     if (empty($_POST[$key])) {
-            $errors[$key] = "Это поле надо заполнить";
-     }
-   }
+
+   $errors = validate_task_form($connect, $added_task, $user_id);
 
 
    // Проверяем был ли прикреплен файл
@@ -53,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    if (isset($_FILES["preview"]["name"]) && ($_FILES["preview"]["name"] != '')) {
 
      $file_name = $_FILES["preview"]["name"];
+     $file_name_tmp = $_FILES["preview"]["tmp_name"];
      $file_path = __DIR__ . "/";
      $file_url = $file_path . $file_name;
 
@@ -67,9 +61,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      $added_name = $added_task["name"];
      if ($save_file) {
        $added_file = $file_path . $file_name;
+
+       // проверяем есть ли уже файл с таким именем
+       while (file_exists($file_path . $file_name)) {
+         $file_name = "1".$file_name;
+       }
+       $added_file = $file_path . $file_name;
+
      } else {
        $added_file = "";
      }
+
 
      $added_project = $added_task["project"];
      $now = date("Y-m-d H:i:s");
@@ -92,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      if ($insert_result) {
 
        if ($save_file) {
+
          // сохраняем файл
          move_uploaded_file($_FILES["preview"]["tmp_name"], $file_path . $file_name);
        }

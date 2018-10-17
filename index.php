@@ -9,7 +9,7 @@ require("functions.php");
 if (isset($_GET["show_completed"])) {
 
   $show_complete_tasks = $_GET["show_completed"];
-  
+
   // анти-инъекция
   settype($show_complete_tasks, 'integer');
   $_SESSION["user"]["show_completed"] = $_GET["show_completed"];
