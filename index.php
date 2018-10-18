@@ -79,7 +79,9 @@ if (!empty($project_id)) {
 $request = 'SELECT * FROM `tasks` WHERE `created_by_user` = '. $user_id;
 
 if (!empty($project)) {
-  $request .= ' AND `related_to_proj` = '. $project['id'];
+  $request .= ' AND `related_to_proj` = '. $project['id'] . " ORDER BY creation_date DESC";
+} else {
+  $request .= " ORDER BY creation_date DESC";
 }
 
 /* проверяем установлен ли идентификатор для фильтрации задач */
@@ -102,6 +104,7 @@ if ( !empty($_GET["date"]) ) {
     }
 
 }
+
 $tasks = sel_from_db_to_array($connect, $request);
 
 // Выполнение задачи
@@ -129,15 +132,15 @@ if (isset($_GET["task_id"], $_GET["check"])) {
   $result_sql = insert_into_db($connect, $sql);
 
   // получим id проекта, если были в проекте, чтобы сделать правильный редирект после выполнения задачи
-  $proj_id = "";
-  $location_tag = "";
-  $proj_id = get_proj_id($connect, $task_id);
-  if ($proj_id != "") {
-    $location_tag = "?id=" . $proj_id;
-  }
+  // $proj_id = "";
+  // $location_tag = "";
+  // $proj_id = get_proj_id($connect, $task_id);
+  // if ($proj_id != "") {
+  //   $location_tag = "?id=" . $proj_id;
+  // }
 
 
-  header("Location: /index.php" . $location_tag);
+  header("Location: /index.php");
 
   // exit();
 }
