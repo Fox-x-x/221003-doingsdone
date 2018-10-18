@@ -431,11 +431,10 @@ function validate_project_form($connect, $project, $user_id) {
   return $errors;
 }
 
+// находим id проекта по id задачи
+function get_proj_id($connect, $task_id) {
 
-// проверяем есть ли файл с таким именем в директории
-function check_file_for_existence($connect, $name, $user_id) {
-
-  $result = false;
+  $result = "";
 
   if ($connect == false) {
     print("Ошибка подключения: " . mysqli_connect_error());
@@ -443,10 +442,11 @@ function check_file_for_existence($connect, $name, $user_id) {
   } else {
     mysqli_set_charset($connect, "utf8");
 
-    $request = "SELECT * FROM tasks WHERE file = '$name' AND created_by_user = '$user_id' ";
+    $request = "SELECT * FROM tasks WHERE id = '$task_id' ";
 
     // Выполняем запрос и получаем результат
     $mysq_result = mysqli_query($connect, $request);
+    $result_array = mysqli_fetch_array($mysq_result, MYSQLI_ASSOC);
 
 
     // если запрос НЕ выполнился
@@ -455,15 +455,13 @@ function check_file_for_existence($connect, $name, $user_id) {
       $error = mysqli_error($connect);
       print("Ошибка при выполнении запроса к БД: " . $error);
 
-    }
+    } else {
 
-    // если запрос выполнился и вернул ненулевое кол-во строк, то проект существует
-    if ( $mysq_result->num_rows > 0 ) {
-      $result = true;
+      $result = $result_array["related_to_proj"];
+
     }
 
   }
-
 
   return $result;
 }

@@ -128,7 +128,18 @@ if (isset($_GET["task_id"], $_GET["check"])) {
              WHERE id = " . $task_id;
   $result_sql = insert_into_db($connect, $sql);
 
-  exit();
+  // получим id проекта, если были в проекте, чтобы сделать правильный редирект после выполнения задачи
+  $proj_id = "";
+  $location_tag = "";
+  $proj_id = get_proj_id($connect, $task_id);
+  if ($proj_id != "") {
+    $location_tag = "?id=" . $proj_id;
+  }
+
+
+  header("Location: /index.php" . $location_tag);
+
+  // exit();
 }
 
 $content = include_template("index.php", [
