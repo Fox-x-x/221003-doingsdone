@@ -31,14 +31,15 @@ $added_project["name"] = "";
 if (!empty($_POST)) {
 
    $added_project = $_POST;
-
-   $added_project["name"] = mysqli_real_escape_string($connect, $_POST["name"]);
-
-   $required = ["name"];
-
    $errors = [];
 
-   if (strlen($added_project["name"])) {
+   if ( !empty($added_project["name"]) ) {
+     $added_project["name"] = mysqli_real_escape_string($connect, $_POST["name"]);
+   } else {
+     $errors["name"] = "Это поле нужно заполнить";
+   }
+
+   if ( (strlen($added_project["name"])) && (empty($errors))) {
      $errors = validate_project_form($connect, $added_project, $user_id);
    }
 
@@ -57,7 +58,7 @@ if (!empty($_POST)) {
      }
    }
 
-   
+
 
 }
 

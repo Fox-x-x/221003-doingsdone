@@ -188,7 +188,7 @@ function check_proj_for_existence($project_id, $connect, $user_id) {
 
 
 // валидация формы регистрации
-function validate_reg_form($connect, $email, $required, $user) {
+function validate_reg_form($connect, $email) {
 
   $errors = [];
 
@@ -204,12 +204,6 @@ function validate_reg_form($connect, $email, $required, $user) {
     }
   }
 
-  // проверяем все ли поля заполнены
-  foreach ($required as $key) {
-    if (empty($user[$key])) {
-        $errors[$key] = "Это поле надо заполнить";
-    }
-  }
 
   return $errors;
 }

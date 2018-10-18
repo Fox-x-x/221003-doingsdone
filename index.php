@@ -12,11 +12,11 @@ if (isset($_GET["show_completed"])) {
 
   // анти-инъекция
   settype($show_complete_tasks, 'integer');
-  $_SESSION["user"]["show_completed"] = $_GET["show_completed"];
+  $_SESSION["show_completed"] = $_GET["show_completed"];
 
 } else {
 
-    $show_complete_tasks = $_SESSION["user"]["show_completed"] ?? 1;
+    $show_complete_tasks = $_SESSION["show_completed"] ?? 1;
 
 }
 
@@ -79,9 +79,7 @@ if (!empty($project_id)) {
 $request = 'SELECT * FROM `tasks` WHERE `created_by_user` = '. $user_id;
 
 if (!empty($project)) {
-  $request .= ' AND `related_to_proj` = '. $project['id'] . " ORDER BY creation_date DESC";
-} else {
-  $request .= " ORDER BY creation_date DESC";
+  $request .= ' AND `related_to_proj` = '. $project['id'];
 }
 
 /* проверяем установлен ли идентификатор для фильтрации задач */
@@ -94,7 +92,7 @@ if ( !empty($_GET["date"]) ) {
           break;
         }
         case 'tomorrow' : {
-          $request.= ' AND `deadline` >= date_add(CURRENT_DATE, INTERVAL 1 day) AND `deadline` < date_add(CURRENT_DATE, INTERVAL 2 day);';
+          $request.= ' AND `deadline` >= date_add(CURRENT_DATE, INTERVAL 1 day) AND `deadline` < date_add(CURRENT_DATE, INTERVAL 2 day)';
           break;
         }
         case 'overdue': {
@@ -103,7 +101,10 @@ if ( !empty($_GET["date"]) ) {
         }
     }
 
+
+
 }
+$request .= " ORDER BY creation_date DESC";
 
 $tasks = sel_from_db_to_array($connect, $request);
 
@@ -131,19 +132,11 @@ if (isset($_GET["task_id"], $_GET["check"])) {
              WHERE id = " . $task_id;
   $result_sql = insert_into_db($connect, $sql);
 
-  // получим id проекта, если были в проекте, чтобы сделать правильный редирект после выполнения задачи
-  // $proj_id = "";
-  // $location_tag = "";
-  // $proj_id = get_proj_id($connect, $task_id);
-  // if ($proj_id != "") {
-  //   $location_tag = "?id=" . $proj_id;
-  // }
-
 
   header("Location: /index.php");
 
-  // exit();
 }
+
 
 $content = include_template("index.php", [
   "show_complete_tasks" => $show_complete_tasks,

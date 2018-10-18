@@ -38,6 +38,7 @@ if (!empty($_POST)) {
 
    $errors = [];
 
+   // валидируем форму, включая все защиты от инъекций и прочего
    $errors = validate_task_form($connect, $added_task, $user_id);
 
 
@@ -46,7 +47,6 @@ if (!empty($_POST)) {
    if (isset($_FILES["preview"]["name"]) && ($_FILES["preview"]["name"] != '')) {
 
      $file_name = $_FILES["preview"]["name"];
-     $file_name_tmp = $_FILES["preview"]["tmp_name"];
      $file_path = __DIR__ . "/";
      $file_url = $file_path . $file_name;
 
@@ -64,7 +64,7 @@ if (!empty($_POST)) {
 
        // проверяем есть ли уже файл с таким именем
        while (file_exists($file_path . $file_name)) {
-         $file_name = "1".$file_name;
+         $file_name = date("Y-m-d H:i:s").$file_name;
        }
        $added_file = $file_path . $file_name;
 
@@ -76,13 +76,16 @@ if (!empty($_POST)) {
      $added_project = $added_task["project"];
      $now = date("Y-m-d H:i:s");
      $added_date = $added_task["date"];
+     // защищаемся от инъекций через имя файла
+     $added_file_safe_name = mysqli_real_escape_string($connect, $added_file);
      $added_date = $added_task["date"] ? "'$added_date'" : 'null';
+     
      $insert_request = "INSERT INTO tasks
                            SET creation_date      = '$now',
                                date_of_completion = null,
                                status             = 0,
                                name               = '$added_name',
-                               file               = '$added_file',
+                               file               = '$added_file_safe_name',
                                deadline           =  $added_date,
                                created_by_user    = '$user_id',
                                related_to_proj    = '$added_project'";
